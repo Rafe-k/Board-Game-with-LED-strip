@@ -9,6 +9,7 @@
 #include <avr/power.h>  // Required for 16 MHz Adafruit Trinket
 #endif
 
+
 // Which pin on the Arduino is connected to the NeoPixels?
 #define PIN 6  // On Trinket or Gemma, suggest changing this to 1
 
@@ -97,8 +98,8 @@ void led_strip_shuffle() { 
       pixels.setPixelColor(i, ledBrightness, 0, 0);    
     } else if (ledrand == 1) {
       pixels.setPixelColor(i, 0, 0, ledBrightness);    
-    }    
-    ledList[i] = ledrand;    
+    }
+      ledList[i] = ledrand;    
     pixels.show();  // Send the updated pixel colors to the hardware.    
     delay(DELAYVAL);  
   }  
@@ -110,4 +111,20 @@ void led_strip_shuffle() { 
     pixels.show();
     delay(1000);
   }
+}
+
+
+void laserRun() {
+
+  digitalWrite(laser, HIGH);
+}
+
+void potentiometer() {
+  int brightness = analogRead(pot);
+
+  brightness = map(brightness, 0, 1023, 5, 100);
+
+  Serial.println(brightness);
+
+  ledBrightness = brightness;
 }
