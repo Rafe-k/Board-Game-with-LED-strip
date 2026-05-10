@@ -9,7 +9,6 @@
 #include <avr/power.h>  // Required for 16 MHz Adafruit Trinket
 #endif
 
-
 // Which pin on the Arduino is connected to the NeoPixels?
 #define PIN 6  // On Trinket or Gemma, suggest changing this to 1
 
