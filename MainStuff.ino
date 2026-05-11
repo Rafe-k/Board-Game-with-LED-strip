@@ -57,7 +57,6 @@ void setup() {
   led_strip_shuffle();
 }
 
-
 void loop() {
   
   if (digitalRead(button) == HIGH) {
@@ -65,6 +64,7 @@ void loop() {
   }
 
   laserRun();
+    
   int p = analogRead(photo);
   //Serial.println(p);
 
@@ -90,21 +90,21 @@ void show_led_strip() {
   pixels.show();
 }
 
-void led_strip_shuffle() {  
-  pixels.clear();  // Set all pixel colors to 'off'
-  for (int i = 0; i < NUMPIXELS; i++) {    
-    int ledrand = rand() % 2;     
-    if (ledrand == 0) {      
-      pixels.setPixelColor(i, ledBrightness, 0, 0);    
+void led_strip_shuffle() {
+  pixels.clear();  // Set all pixel colors to 'off'
+  for (int i = 0; i < NUMPIXELS; i++) {
+    int ledrand = rand() % 2; 
+    if (ledrand == 0) {
+      pixels.setPixelColor(i, ledBrightness, 0, 0);
     } else if (ledrand == 1) {
-      pixels.setPixelColor(i, 0, 0, ledBrightness);    
+      pixels.setPixelColor(i, 0, 0, ledBrightness);
     }
-      ledList[i] = ledrand;    
-    pixels.show();  // Send the updated pixel colors to the hardware.    
-    delay(DELAYVAL);  
-  }  
-  delay(1000);  
-  for (int i = 0; i < 3; i++) {    
+    ledList[i] = ledrand;
+    pixels.show();  // Send the updated pixel colors to the hardware.
+    delay(DELAYVAL);
+  }
+  delay(1000);
+  for (int i = 0; i < 3; i++){
     int magentaReplace = rand() % 16;
     pixels.setPixelColor(magentaReplace, ledBrightness, 0, ledBrightness);
     ledList[magentaReplace] = 2;
@@ -113,11 +113,21 @@ void led_strip_shuffle() { 
   }
 }
 
-
 void laserRun() {
-
-  digitalWrite(laser, HIGH);
+  if (digitalRead(button_2) == HIGH) {
+    digitalWrite(laser, HIGH);
+  } else {
+    digitalWrite(laser, LOW);
+  }
 }
+
+/*void button_2_press() {
+
+  
+
+}*/
+
+
 
 void potentiometer() {
   int brightness = analogRead(pot);
