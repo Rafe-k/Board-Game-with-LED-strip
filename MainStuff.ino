@@ -3,7 +3,7 @@
 // Adafruit NeoPixel library
 //#include <ArduinoSTL.h>
 //using namespace std;
-//#include <thread>
+//#include <Arduino_Threads.h>
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
 #include <avr/power.h>  // Required for 16 MHz Adafruit Trinket
@@ -35,6 +35,7 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 float ledBrightness = 20;
 bool button_2_pressed = 0;
+int magentaNumber = 3;
 
 
 
@@ -64,9 +65,12 @@ void loop() {
   }
 
   laserRun();
+  if (digitalRead(button_2 == HIGH)) {
+    ledBrightWave();
+  }
     
-  int p = analogRead(photo);
-  //Serial.println(p);
+  float p = analogRead(photo);
+  Serial.println(p);
 
   //button_2_press();
   potentiometer();
@@ -104,7 +108,7 @@ void led_strip_shuffle() {
     delay(DELAYVAL);
   }
   delay(1000);
-  for (int i = 0; i < 3; i++){
+  for (int i = 0; i < magentaNumber; i++){
     int magentaReplace = rand() % 16;
     pixels.setPixelColor(magentaReplace, ledBrightness, 0, ledBrightness);
     ledList[magentaReplace] = 2;
@@ -121,11 +125,6 @@ void laserRun() {
   }
 }
 
-/*void button_2_press() {
-
-  
-
-}*/
 
 
 
@@ -134,7 +133,22 @@ void potentiometer() {
 
   brightness = map(brightness, 0, 1023, 5, 100);
 
-  Serial.println(brightness);
-
   ledBrightness = brightness;
 }
+
+/*void ledBrightWave() {
+  for (int i = 0; i < NUMPIXELS; i++) {
+    if (ledList[i] == 0) {
+      //pixels.setPixelColor(i, ledBrightness, 0, 0);
+      pixels.setPixelColor(i, ledBrightness, ledBrightness, ledBrightness);
+    } else if (ledList[i] == 1) {
+      //pixels.setPixelColor(i, 0, 0, ledBrightness);
+      pixels.setPixelColor(i, ledBrightness, ledBrightness, ledBrightness);
+    } else if (ledList[i] == 2) {
+      //pixels.setPixelColor(i, ledBrightness, 0, ledBrightness);
+      pixels.setPixelColor(i, ledBrightness, ledBrightness, ledBrightness);
+    }
+    delay(100);
+  }
+
+}*/
