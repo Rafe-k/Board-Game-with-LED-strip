@@ -21,6 +21,9 @@ const int button_2 = 8;
 const int laser = 2;
 const int photo = A5;
 const int pot = A0;
+const int EnA = 11;
+const int In1 = 3;
+const int In2 = A2;
 
 using namespace std;
 
@@ -46,6 +49,9 @@ void setup() {
   pinMode(button, INPUT);
   pinMode(button_2, INPUT);
   pinMode(pot, INPUT);
+  pinMode(EnA, OUTPUT);
+  pinMode(In1, OUTPUT);
+  pinMode(In2, OUTPUT);
   Serial.begin(9600);
   // These lines are specifically to support the Adafruit Trinket 5V 16 MHz.
   // Any other board, you can remove this part (but no harm leaving it):
@@ -66,7 +72,7 @@ void loop() {
 
   laserRun();
   if (digitalRead(button_2 == HIGH)) {
-    ledBrightWave();
+    //ledBrightWave();
   }
     
   float p = analogRead(photo);
@@ -75,8 +81,6 @@ void loop() {
   //button_2_press();
   potentiometer();
   show_led_strip();
-  // The first NeoPixel in a strand is #0, second is 1, all the way up
-  // to the count of pixels minus one.
   
   
 }
@@ -97,6 +101,7 @@ void show_led_strip() {
 void led_strip_shuffle() {
   pixels.clear();  // Set all pixel colors to 'off'
   for (int i = 0; i < NUMPIXELS; i++) {
+    pixels.setPixelColor(i+1, ledBrightness, ledBrightness, ledBrightness);
     int ledrand = rand() % 2; 
     if (ledrand == 0) {
       pixels.setPixelColor(i, ledBrightness, 0, 0);
@@ -107,13 +112,13 @@ void led_strip_shuffle() {
     pixels.show();  // Send the updated pixel colors to the hardware.
     delay(DELAYVAL);
   }
-  delay(1000);
+  delay(250);
   for (int i = 0; i < magentaNumber; i++){
     int magentaReplace = rand() % 16;
     pixels.setPixelColor(magentaReplace, ledBrightness, 0, ledBrightness);
     ledList[magentaReplace] = 2;
     pixels.show();
-    delay(1000);
+    delay(250);
   }
 }
 
@@ -150,5 +155,4 @@ void potentiometer() {
     }
     delay(100);
   }
-
 }*/
