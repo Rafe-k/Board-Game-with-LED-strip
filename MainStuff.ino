@@ -24,6 +24,7 @@ const int pot = A0;
 const int EnA = 11;
 const int In1 = 3;
 const int In2 = A2;
+const int button_3 = 7;
 
 using namespace std;
 
@@ -38,7 +39,8 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 float ledBrightness = 20;
 bool button_2_pressed = 0;
-int magentaNumber = 3;
+int magentaNumber = 4; //actual number is one lower
+int button_3_count = 4;
 
 
 
@@ -48,6 +50,7 @@ void setup() {
   pinMode(photo, INPUT);
   pinMode(button, INPUT);
   pinMode(button_2, INPUT);
+  pinMode(button_3, INPUT);
   pinMode(pot, INPUT);
   pinMode(EnA, OUTPUT);
   pinMode(In1, OUTPUT);
@@ -81,6 +84,10 @@ void loop() {
   //button_2_press();
   potentiometer();
   show_led_strip();
+
+  if (digitalRead(button_3) == HIGH) {
+    button_3_press();
+  }
   
   
 }
@@ -156,3 +163,15 @@ void potentiometer() {
     delay(100);
   }
 }*/
+
+void button_3_press() {
+
+  for (int g = 0; g < 3; g++) {
+    for (int i = 0; i < button_3_count; i++) {
+      pixels.setPixelColor(i, ledBrightness, ledBrightness, ledBrightness);
+    }
+    delay(1000);
+    show_led_strip();
+    delay(1000);
+  }
+}
