@@ -40,7 +40,7 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 float ledBrightness = 20;
 bool button_2_pressed = 0;
 int magentaNumber = 4; //actual number is one lower
-int button_3_count = 4;
+int initial_player_count = 4;
 
 
 
@@ -64,6 +64,20 @@ void setup() {
   // END of Trinket-specific code.
 
   pixels.begin();  // INITIALIZE NeoPixel strip object (REQUIRED)
+  
+
+  do{
+    initial_player_indicator();
+    if (digitalRead(button) == HIGH) {
+      if (initial_player_count == 4) {
+        initial_player_count = 2;
+        delay(250);
+      } else {
+        initial_player_count +=1;
+        delay(250);
+      }
+    }
+  } while (digitalRead(button_2) == LOW);
   led_strip_shuffle();
 }
 
@@ -86,7 +100,7 @@ void loop() {
   show_led_strip();
 
   if (digitalRead(button_3) == HIGH) {
-    button_3_press();
+    
   }
   
   
@@ -137,9 +151,6 @@ void laserRun() {
   }
 }
 
-
-
-
 void potentiometer() {
   int brightness = analogRead(pot);
 
@@ -164,14 +175,25 @@ void potentiometer() {
   }
 }*/
 
-void button_3_press() {
+/*void button_3_press() {
 
   for (int g = 0; g < 3; g++) {
     for (int i = 0; i < button_3_count; i++) {
       pixels.setPixelColor(i, ledBrightness, ledBrightness, ledBrightness);
+      pixels.show();
     }
-    delay(1000);
+    delay(500);
     show_led_strip();
-    delay(1000);
+    delay(500);
+  }
+}*/
+
+void initial_player_indicator(){
+  for (int g = 0; g < 3; g++) {
+    for (int i = 0; i < initial_player_count; i++) {
+      pixels.setPixelColor(i, ledBrightness, ledBrightness, ledBrightness);
+      pixels.show();
+    }
+    show_led_strip();
   }
 }
