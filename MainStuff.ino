@@ -4,6 +4,11 @@
 //#include <ArduinoSTL.h>
 //using namespace std;
 //#include <Arduino_Threads.h>
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
+
+LiquidCrystal_I2C lcd1(0x27, 16, 2);
+
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
 #include <avr/power.h>  // Required for 16 MHz Adafruit Trinket
@@ -57,6 +62,9 @@ void setup() {
   pinMode(In2, OUTPUT);
   pinMode(photo, INPUT);
   Serial.begin(9600);
+
+  lcd1.begin();
+  lcd1.backlight();
   // These lines are specifically to support the Adafruit Trinket 5V 16 MHz.
   // Any other board, you can remove this part (but no harm leaving it):
   // #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
@@ -83,6 +91,9 @@ void setup() {
 }
 
 void loop() {
+
+  lcd1.setCursor(0,0);
+  lcd1.print("Hello world!");
   
   if (digitalRead(button) == HIGH) {
     led_strip_shuffle();
