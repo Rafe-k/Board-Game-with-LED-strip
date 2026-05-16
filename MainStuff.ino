@@ -21,9 +21,9 @@ const int button_2 = 8;
 const int laser = 2;
 const int photo = A5;
 const int pot = A0;
-const int EnA = 11;
-const int In1 = 3;
-const int In2 = A2;
+const int EnA = 5;
+const int In1 = 10;
+const int In2 = 4;
 const int button_3 = 7;
 
 using namespace std;
@@ -55,6 +55,7 @@ void setup() {
   pinMode(EnA, OUTPUT);
   pinMode(In1, OUTPUT);
   pinMode(In2, OUTPUT);
+  pinMode(photo, INPUT);
   Serial.begin(9600);
   // These lines are specifically to support the Adafruit Trinket 5V 16 MHz.
   // Any other board, you can remove this part (but no harm leaving it):
@@ -88,20 +89,21 @@ void loop() {
   }
 
   laserRun();
-  if (digitalRead(button_2 == HIGH)) {
-    //ledBrightWave();
-  }
+  // if (digitalRead(button_2 == HIGH)) {
+  //   //ledBrightWave();
+  // }
     
-  float p = analogRead(photo);
+  int p = analogRead(photo);
   Serial.println(p);
+  run_motor(p);
 
   //button_2_press();
   potentiometer();
-  show_led_strip();
+  //show_led_strip();
 
-  if (digitalRead(button_3) == HIGH) {
+  // if (digitalRead(button_3) == HIGH) {
     
-  }
+  // }
   
   
 }
@@ -195,5 +197,15 @@ void initial_player_indicator(){
       pixels.show();
     }
     show_led_strip();
+  }
+}
+
+int run_motor(int p){
+  digitalWrite(In1, HIGH);
+  digitalWrite(In2, LOW);
+
+  if (p < 200) {
+    digitalWrite(In1, LOW);
+    digitalWrite(In2, LOW);
   }
 }
