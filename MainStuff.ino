@@ -4,10 +4,10 @@
 //#include <ArduinoSTL.h>
 //using namespace std;
 //#include <Arduino_Threads.h>
-#include <LiquidCrystal_I2C.h>
-#include <Wire.h>
+// #include <LiquidCrystal_I2C.h>
+// #include <Wire.h>
 
-LiquidCrystal_I2C lcd1(0x27, 16, 2);
+// LiquidCrystal_I2C lcd1(0x20, 16, 2);
 
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
@@ -24,9 +24,9 @@ LiquidCrystal_I2C lcd1(0x27, 16, 2);
 const int button = 12;
 const int button_2 = 8;
 const int laser = 2;
-const int photo = A5;
+const int photo = A2;
 const int pot = A0;
-const int EnA = 5;
+const int EnA = 11;
 const int In1 = 10;
 const int In2 = 4;
 const int button_3 = 7;
@@ -63,8 +63,8 @@ void setup() {
   pinMode(photo, INPUT);
   Serial.begin(9600);
 
-  lcd1.begin();
-  lcd1.backlight();
+  // lcd1.begin();
+  // lcd1.backlight();
   // These lines are specifically to support the Adafruit Trinket 5V 16 MHz.
   // Any other board, you can remove this part (but no harm leaving it):
   // #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
@@ -92,8 +92,8 @@ void setup() {
 
 void loop() {
 
-  lcd1.setCursor(0,0);
-  lcd1.print("Hello world!");
+  //lcd1.setCursor(0,0);
+  //lcd1.print("Hello world!");
   
   if (digitalRead(button) == HIGH) {
     led_strip_shuffle();
@@ -212,11 +212,15 @@ void initial_player_indicator(){
 }
 
 int run_motor(int p){
+  
+  analogWrite(EnA, 150);
   digitalWrite(In1, HIGH);
   digitalWrite(In2, LOW);
+  analogWrite(EnA, 150);
 
   if (p < 200) {
     digitalWrite(In1, LOW);
     digitalWrite(In2, LOW);
   }
 }
+
