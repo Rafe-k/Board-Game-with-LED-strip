@@ -83,6 +83,7 @@ void setup() {
   
 
   do{
+    lcd_both("Btn1 for count", "Btn2 to start");
     initial_player_indicator();
     if (digitalRead(button) == HIGH) {
       if (initial_player_count == 4) {
@@ -99,15 +100,11 @@ void setup() {
 
 void loop() {
 
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("Hello, World!");
-  lcd.setCursor(0,1);
-  lcd.print("Hello again");
-  delay(2000);
+  lcd_both("Dispense orbs", "SECOND LINE");
 
   
   if (digitalRead(button) == HIGH) {
+    lcd_both("SOMTHING ABOUT", "THE LED STRIP");
     led_strip_shuffle();
   }
 
@@ -233,4 +230,12 @@ int run_motor(int p){
     digitalWrite(In1, LOW);
     digitalWrite(In2, LOW);
   }
+}
+
+string lcd_both(string first, string second){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print(first);
+  lcd.setCursor(second);
+  lcd.print(second);
 }
