@@ -10,7 +10,7 @@
 // LiquidCrystal_I2C lcd1(0x20, 16, 2);
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-#include <LCD.h>
+//#include <LCD.h>
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
 #include <avr/power.h>  // Required for 16 MHz Adafruit Trinket
@@ -74,17 +74,16 @@ void setup() {
   // END of Trinket-specific code.
 
   pixels.begin();  // INITIALIZE NeoPixel strip object (REQUIRED)
-  lcd.begin(16,2);
-  lcd.clear();
-  //lcd.setBacklightPin(3,POSITIVE);
+  // lcd.clear();
+  lcd.init();
+  lcd.backlight();
+  
 
   
   
 
   do{
     initial_player_indicator();
-    lcd.home();
-    lcd.print("Hello, world!");
     if (digitalRead(button) == HIGH) {
       if (initial_player_count == 4) {
         initial_player_count = 2;
@@ -100,9 +99,12 @@ void setup() {
 
 void loop() {
 
-  lcd.home();
-  lcd.print("Hello, world!");
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Hello, World!");
   lcd.setCursor(0,1);
+  lcd.print("Hello again");
+  delay(2000);
 
   
   if (digitalRead(button) == HIGH) {
@@ -232,4 +234,3 @@ int run_motor(int p){
     digitalWrite(In2, LOW);
   }
 }
-
