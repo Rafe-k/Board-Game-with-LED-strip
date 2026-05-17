@@ -8,7 +8,9 @@
 // #include <Wire.h>
 
 // LiquidCrystal_I2C lcd1(0x20, 16, 2);
-
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <LCD.h>
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
 #include <avr/power.h>  // Required for 16 MHz Adafruit Trinket
@@ -47,6 +49,7 @@ bool button_2_pressed = 0;
 int magentaNumber = 4; //actual number is one lower
 int initial_player_count = 4;
 
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 
 void setup() {
@@ -63,8 +66,6 @@ void setup() {
   pinMode(photo, INPUT);
   Serial.begin(9600);
 
-  // lcd1.begin();
-  // lcd1.backlight();
   // These lines are specifically to support the Adafruit Trinket 5V 16 MHz.
   // Any other board, you can remove this part (but no harm leaving it):
   // #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
@@ -73,10 +74,17 @@ void setup() {
   // END of Trinket-specific code.
 
   pixels.begin();  // INITIALIZE NeoPixel strip object (REQUIRED)
+  lcd.begin(16,2);
+  lcd.clear();
+  //lcd.setBacklightPin(3,POSITIVE);
+
+  
   
 
   do{
     initial_player_indicator();
+    lcd.home();
+    lcd.print("Hello, world!");
     if (digitalRead(button) == HIGH) {
       if (initial_player_count == 4) {
         initial_player_count = 2;
@@ -92,8 +100,10 @@ void setup() {
 
 void loop() {
 
-  //lcd1.setCursor(0,0);
-  //lcd1.print("Hello world!");
+  lcd.home();
+  lcd.print("Hello, world!");
+  lcd.setCursor(0,1);
+
   
   if (digitalRead(button) == HIGH) {
     led_strip_shuffle();
@@ -105,7 +115,6 @@ void loop() {
   // }
     
   int p = analogRead(photo);
-  Serial.println(p);
   run_motor(p);
 
   //button_2_press();
