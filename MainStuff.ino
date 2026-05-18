@@ -1,16 +1,5 @@
-// NeoPixel Ring simple sketch (c) 2013 Shae Erisson
-// Released under the GPLv3 license to match the rest of the
-// Adafruit NeoPixel library
-//#include <ArduinoSTL.h>
-//using namespace std;
-//#include <Arduino_Threads.h>
-// #include <LiquidCrystal_I2C.h>
-// #include <Wire.h>
-
-// LiquidCrystal_I2C lcd1(0x20, 16, 2);
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-//#include <LCD.h>
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
 #include <avr/power.h>  // Required for 16 MHz Adafruit Trinket
@@ -36,10 +25,7 @@ const int button_3 = 7;
 using namespace std;
 
 int ledList[16];
-// When setting up the NeoPixel library, we tell it how many pixels,
-// and which pin to use to send signals. Note that for older NeoPixel
-// strips you might need to change the third parameter -- see the
-// strandtest example for more information on possible values.
+
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 #define DELAYVAL 50  // Time (in milliseconds) to pause between pixels
@@ -66,21 +52,10 @@ void setup() {
   pinMode(photo, INPUT);
   Serial.begin(9600);
 
-  // These lines are specifically to support the Adafruit Trinket 5V 16 MHz.
-  // Any other board, you can remove this part (but no harm leaving it):
-  // #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
-  //   clock_prescale_set(clock_div_1);
-  // #endif
-  // END of Trinket-specific code.
-
   pixels.begin();  // INITIALIZE NeoPixel strip object (REQUIRED)
-  // lcd.clear();
   lcd.init();
   lcd.backlight();
-  
-
-  
-  
+    
   lcd_both("Btn1 for count", "Btn2 to start");
   do{
     
@@ -100,8 +75,6 @@ void setup() {
 }
 
 void loop() {
-
-
   
   if (digitalRead(button) == HIGH) {
     lcd_both("SOMTHING ABOUT", "THE LED STRIP");
@@ -110,26 +83,17 @@ void loop() {
   }
 
   laserRun();
-  // if (digitalRead(button_2 == HIGH)) {
-  //   //ledBrightWave();
-  // }
     
   int p = analogRead(photo);
   run_motor(p);
   Serial.println(p);
 
-  //button_2_press();
   potentiometer();
   show_led_strip();
-
-  // if (digitalRead(button_3) == HIGH) {
-    
-  // }
-  
   
 }
 
-void show_led_strip() {
+void show_led_strip() { //updates the led strip without shuffling the values found in the list
   for (int i = 0; i < NUMPIXELS; i++) {
     if (ledList[i] == 0) {
       pixels.setPixelColor(i, ledBrightness, 0, 0);
@@ -142,8 +106,8 @@ void show_led_strip() {
   pixels.show();
 }
 
-void led_strip_shuffle() {
-  pixels.clear();  // Set all pixel colors to 'off'
+void led_strip_shuffle() { //shuffles the led strip lights and sends updates the list
+  pixels.clear();
   for (int i = 0; i < NUMPIXELS; i++) {
     pixels.setPixelColor(i+1, ledBrightness, ledBrightness, ledBrightness);
     int ledrand = rand() % 2; 
@@ -153,7 +117,7 @@ void led_strip_shuffle() {
       pixels.setPixelColor(i, 0, 0, ledBrightness);
     }
     ledList[i] = ledrand;
-    pixels.show();  // Send the updated pixel colors to the hardware.
+    pixels.show();
     delay(DELAYVAL);
   }
   delay(250);
@@ -166,7 +130,7 @@ void led_strip_shuffle() {
   }
 }
 
-void laserRun() {
+void laserRun() { //turns on the laser
   if (digitalRead(button_2) == HIGH) {
     digitalWrite(laser, HIGH);
   } else {
@@ -174,7 +138,7 @@ void laserRun() {
   }
 }
 
-void potentiometer() {
+void potentiometer() { //changes led strip brightness
   int brightness = analogRead(pot);
 
   brightness = map(brightness, 0, 1023, 5, 100);
@@ -182,36 +146,8 @@ void potentiometer() {
   ledBrightness = brightness;
 }
 
-/*void ledBrightWave() {
-  for (int i = 0; i < NUMPIXELS; i++) {
-    if (ledList[i] == 0) {
-      //pixels.setPixelColor(i, ledBrightness, 0, 0);
-      pixels.setPixelColor(i, ledBrightness, ledBrightness, ledBrightness);
-    } else if (ledList[i] == 1) {
-      //pixels.setPixelColor(i, 0, 0, ledBrightness);
-      pixels.setPixelColor(i, ledBrightness, ledBrightness, ledBrightness);
-    } else if (ledList[i] == 2) {
-      //pixels.setPixelColor(i, ledBrightness, 0, ledBrightness);
-      pixels.setPixelColor(i, ledBrightness, ledBrightness, ledBrightness);
-    }
-    delay(100);
-  }
-}*/
 
-/*void button_3_press() {
-
-  for (int g = 0; g < 3; g++) {
-    for (int i = 0; i < button_3_count; i++) {
-      pixels.setPixelColor(i, ledBrightness, ledBrightness, ledBrightness);
-      pixels.show();
-    }
-    delay(500);
-    show_led_strip();
-    delay(500);
-  }
-}*/
-
-void initial_player_indicator(){
+void initial_player_indicator(){ //used to show how many players will be playing
   for (int g = 0; g < 3; g++) {
     for (int i = 0; i < initial_player_count; i++) {
       pixels.setPixelColor(i, ledBrightness, ledBrightness, ledBrightness);
@@ -221,7 +157,7 @@ void initial_player_indicator(){
   }
 }
 
-int run_motor(int p){
+int run_motor(int p){ //runs the motor unless the photoresistor is sending a value below 200
   
   analogWrite(EnA, 255);
   digitalWrite(In1, HIGH);
@@ -234,7 +170,7 @@ int run_motor(int p){
   }
 }
 
-void lcd_both(String first, String second){
+void lcd_both(String first, String second){ // print one string on each line of the LCD
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print(first);
