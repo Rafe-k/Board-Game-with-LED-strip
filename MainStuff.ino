@@ -81,9 +81,9 @@ void setup() {
 
   
   
-
+  lcd_both("Btn1 for count", "Btn2 to start");
   do{
-    lcd_both("Btn1 for count", "Btn2 to start");
+    
     initial_player_indicator();
     if (digitalRead(button) == HIGH) {
       if (initial_player_count == 4) {
@@ -96,16 +96,17 @@ void setup() {
     }
   } while (digitalRead(button_2) == LOW);
   led_strip_shuffle();
+  lcd_both("FIRST LINE", "SECOND LINE");
 }
 
 void loop() {
 
-  lcd_both("Dispense orbs", "SECOND LINE");
 
   
   if (digitalRead(button) == HIGH) {
     lcd_both("SOMTHING ABOUT", "THE LED STRIP");
     led_strip_shuffle();
+    lcd_both("FIRST LINE", "SECOND LINE");
   }
 
   laserRun();
@@ -115,10 +116,11 @@ void loop() {
     
   int p = analogRead(photo);
   run_motor(p);
+  Serial.println(p);
 
   //button_2_press();
   potentiometer();
-  //show_led_strip();
+  show_led_strip();
 
   // if (digitalRead(button_3) == HIGH) {
     
@@ -221,10 +223,10 @@ void initial_player_indicator(){
 
 int run_motor(int p){
   
-  analogWrite(EnA, 150);
+  analogWrite(EnA, 255);
   digitalWrite(In1, HIGH);
   digitalWrite(In2, LOW);
-  analogWrite(EnA, 150);
+  analogWrite(EnA, 255);
 
   if (p < 200) {
     digitalWrite(In1, LOW);
@@ -232,10 +234,11 @@ int run_motor(int p){
   }
 }
 
-string lcd_both(string first, string second){
+void lcd_both(String first, String second){
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print(first);
-  lcd.setCursor(second);
+  lcd.setCursor(0,1);
   lcd.print(second);
 }
+
