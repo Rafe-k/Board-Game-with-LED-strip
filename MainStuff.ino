@@ -7,10 +7,10 @@
 
 
 // Which pin on the Arduino is connected to the NeoPixels?
-#define PIN 6  // On Trinket or Gemma, suggest changing this to 1
+#define PIN 6
 
 // How many NeoPixels are attached to the Arduino?
-#define NUMPIXELS 16  // Popular NeoPixel ring size
+#define NUMPIXELS 16
 
 const int button = 12;
 const int button_2 = 8;
@@ -28,12 +28,11 @@ int ledList[16];
 
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
-#define DELAYVAL 50  // Time (in milliseconds) to pause between pixels
+#define DELAYVAL 50
 
 float ledBrightness = 20;
 bool button_2_pressed = 0;
-int magentaNumber = 4; //actual number is one lower
-int initial_player_count = 4;
+int magentaNumber = 4;
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -58,35 +57,36 @@ void setup() {
     
   lcd_both("Btn1 for count", "Btn2 to start");
   do{
-    
     initial_player_indicator();
     if (digitalRead(button) == HIGH) {
-      if (initial_player_count == 4) {
-        initial_player_count = 2;
+      initial_player_indicator();
+      if (magentaNumber == 7) {
+        magentaNumber = 2;
         delay(250);
       } else {
-        initial_player_count +=1;
-        delay(250);
+        magentaNumber +=1;
+        delay(250); 
       }
     }
   } while (digitalRead(button_2) == LOW);
   led_strip_shuffle();
-  lcd_both("FIRST LINE", "SECOND LINE");
+  lcd_both("Press to shuffle", "Prss to dispense");
 }
 
 void loop() {
   
   if (digitalRead(button) == HIGH) {
-    lcd_both("shuffling the", "board");
+    lcd_both("Shuffling the", "board");
     led_strip_shuffle();
-    lcd_both("FIRST LINE", "SECOND LINE");
+    lcd_both("Press to shuffle", "Prss to dispense");
   }
     
   
 
   if (digitalRead(button_2) == HIGH) {
+    lcd_both("Dispensing...","");
     run_motor();
-    
+    lcd_both("Press to shuffle", "Prss to dispense");
   }
 
 
@@ -124,7 +124,11 @@ void led_strip_shuffle() { //shuffles the led strip lights and sends updates the
   }
   delay(250);
   for (int i = 0; i < magentaNumber; i++){
-    int magentaReplace = rand() % 16;
+    int magentaReplace;
+    do{ // this will reroll until it generates a number that isn't already magenta (2)
+      magentaReplace = rand() % 16;
+    } while(ledList[magentaReplace] == 2);
+    
     pixels.setPixelColor(magentaReplace, ledBrightness, 0, ledBrightness);
     ledList[magentaReplace] = 2;
     pixels.show();
@@ -153,7 +157,7 @@ void potentiometer() { //changes led strip brightness
 
 void initial_player_indicator(){ //used to show how many players will be playing
   for (int g = 0; g < 3; g++) {
-    for (int i = 0; i < initial_player_count; i++) {
+    for (int i = 0; i < magentaNumber; i++) {
       pixels.setPixelColor(i, ledBrightness, ledBrightness, ledBrightness);
       pixels.show();
     }
@@ -170,7 +174,8 @@ void run_motor(){ //runs the motor unless the photoresistor is sending a value b
     digitalWrite(In2, LOW);
     analogWrite(EnA, 50);
     digitalWrite(laser, HIGH);
-  } while (analogRead(photo) > 200);
+    delay(250);
+  } while (analogRead(photo) < 300);
 
   digitalWrite(In1, LOW);
   digitalWrite(In2, LOW);
