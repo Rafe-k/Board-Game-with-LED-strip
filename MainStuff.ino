@@ -77,16 +77,18 @@ void setup() {
 void loop() {
   
   if (digitalRead(button) == HIGH) {
-    lcd_both("SOMTHING ABOUT", "THE LED STRIP");
+    lcd_both("shuffling the", "board");
     led_strip_shuffle();
     lcd_both("FIRST LINE", "SECOND LINE");
   }
-
-  laserRun();
     
-  int p = analogRead(photo);
-  run_motor(p);
-  Serial.println(p);
+  
+
+  if (digitalRead(button_2) == HIGH) {
+    run_motor();
+    
+  }
+
 
   potentiometer();
   show_led_strip();
@@ -138,6 +140,8 @@ void laserRun() { //turns on the laser
   }
 }
 
+
+
 void potentiometer() { //changes led strip brightness
   int brightness = analogRead(pot);
 
@@ -157,17 +161,20 @@ void initial_player_indicator(){ //used to show how many players will be playing
   }
 }
 
-int run_motor(int p){ //runs the motor unless the photoresistor is sending a value below 200
-  
-  analogWrite(EnA, 255);
-  digitalWrite(In1, HIGH);
-  digitalWrite(In2, LOW);
-  analogWrite(EnA, 255);
-
-  if (p < 200) {
-    digitalWrite(In1, LOW);
+void run_motor(){ //runs the motor unless the photoresistor is sending a value below 200
+  do{
+    int p = analogRead(photo);
+    Serial.println(p);
+    analogWrite(EnA, 50);
+    digitalWrite(In1, HIGH);
     digitalWrite(In2, LOW);
-  }
+    analogWrite(EnA, 50);
+    digitalWrite(laser, HIGH);
+  } while (analogRead(photo) > 200);
+
+  digitalWrite(In1, LOW);
+  digitalWrite(In2, LOW);
+  digitalWrite(laser, LOW);
 }
 
 void lcd_both(String first, String second){ // print one string on each line of the LCD
@@ -177,4 +184,5 @@ void lcd_both(String first, String second){ // print one string on each line of 
   lcd.setCursor(0,1);
   lcd.print(second);
 }
+
 
